@@ -1,11 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="aai">
   <head>
     <link rel="stylesheet" href="/styles/style.css">
+    <script src="vendors/angular.min.js" charset="utf-8"></script>
+    <script src="vendors/angular-route.min.js" charset="utf-8"></script>
+    <script src="scripts/app.module.js" charset="utf-8"></script>
+    <script src="scripts/app.config.js" charset="utf-8"></script>
+    <script src="scripts/home.controller.js" charset="utf-8"></script>
     <meta charset="utf-8">
     <title>AAI Code Challenge</title>
+    <base href="/" />
   </head>
   <body>
-    <h1>Hello World</h1>
+    <ng-view></ng-view>
   </body>
 </html>
