@@ -1,1 +1,9 @@
 <h1>Hello world!</h1>
+
+<button ng-click="home.click()">Get Videos</button>
+
+<h2>This is going to be the list of videos</h2>
+<ul>
+  <li>Starts here</li>
+  <li ng-repeat="video in home.videos">{{video}}</li>
+</ul>

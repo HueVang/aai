@@ -5,6 +5,8 @@ var path = require('path');
 
 var app = express();
 
+var home = require('./routes/home.js');
+app.use('/home', home);
 
 app.use(bodyParser.json());
 app.use(express.static('public'));
