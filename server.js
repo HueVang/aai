@@ -2,15 +2,12 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var path = require('path');
 
-
 var app = express();
-
 var home = require('./routes/home.js');
-app.use('/home', home);
 
+app.use('/home', home);
 app.use(bodyParser.json());
 app.use(express.static('public'));
-
 
 app.get('/*', function(req, res){
   res.sendFile(path.join(__dirname, 'public/views/index.html'));
