@@ -60,13 +60,19 @@ angular.module('aai').controller('HomeController', function($http, $location) {
   }; // end ctrl.slug
 
   ctrl.addVideo = function() {
-    ctrl.slug(ctrl.video.title)
-    var video = ctrl.video
-    $http.post('https://proofapi.herokuapp.com/videos', video).then(function(res){
-      if (showLogs) console.log('The response:', res);
-      ctrl.getAllVideos();
-    })
-    ctrl.video = {};
+    var date = new Date();
+    if (date.getDay() == 0 || date.getDay() == 6 || date.getDay() == 3) {
+      alert('Sorry, no posting on the weekends.');
+      if (showLogs) console.log('Sorry, no posting on the weekends.');
+    } else {
+      ctrl.slug(ctrl.video.title)
+      var video = ctrl.video
+      $http.post('https://proofapi.herokuapp.com/videos', video).then(function(res){
+        if (showLogs) console.log('The response:', res);
+        ctrl.getAllVideos();
+      })
+      ctrl.video = {};
+    }
   }; // end ctrl.showVideo
 
 
@@ -106,13 +112,25 @@ angular.module('aai').controller('HomeController', function($http, $location) {
   // var c = new Date(date).toDateString();
 
   ctrl.voteUp = function(video) {
-    var vote = {'video_id' : video.id, 'opinion' : 1};
-    if (showLogs) console.log('Voted up!', vote);
+    var date = new Date();
+    if (date.getDay() == 0 || date.getDay() == 6) {
+      alert('Sorry, no voting on the weekends.')
+      if (showLogs) console.log('Sorry, no voting on the weekends.');
+    } else {
+      var vote = {'video_id' : video.id, 'opinion' : 1};
+      if (showLogs) console.log('Voted up!', vote);
+    }
   }; // end ctrl.voteUp
 
   ctrl.voteDown = function(video) {
-    var vote = {'video_id' : video.id, 'opinion' : -1};
-    if (showLogs) console.log('Voted down...', vote);
+    var date = new Date();
+    if (date.getDay() == 0 || date.getDay() == 6) {
+      alert('Sorry, no voting on the weekends.')
+      if (showLogs) console.log('Sorry, no voting on the weekends.');
+    } else {
+      var vote = {'video_id' : video.id, 'opinion' : -1};
+      if (showLogs) console.log('Voted down...', vote);
+    }
   }; // end ctrl.voteDown
 
 }); // end angular.module
