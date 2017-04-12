@@ -1,12 +1,16 @@
 <h1>Hello world!</h1>
 
 <button ng-click="home.getAllVideos()">Get Videos</button>
-<button ng-click="home.getTopTenViewed()">Top 10 Viewed</button>
+<button ng-click="home.getTopTenViewed()">Most Viewed</button>
+<button ng-click="home.getTopTenVotes()">Most Votes</button>
 
 <h2>This is going to be the list of videos</h2>
 <ol class="videoList">
-  <li ng-repeat="video in home.videos"><a href="{{video.attributes.url}}" target="_blank" ng-click="home.watchVideo(video.id)">{{video.attributes.title}}</a></li>
+  <li ng-if="home.allVideos" ng-repeat="video in home.videos"><a href="{{video.attributes.url}}" target="_blank" ng-click="home.watchVideo(video.id)">{{video.attributes.title}}</a><button ng-click="home.voteUp(video)">Vote Up</button><button ng-click="home.voteDown(video)">Vote Down</button></li>
+  <li ng-if="home.topTenViewed" ng-repeat="video in home.videos | limitTo: 10"><a href="{{video.attributes.url}}" target="_blank" ng-click="home.watchVideo(video.id)">{{video.attributes.title}}</a> | <span>Views: {{video.attributes.view_tally}}</span><button ng-click="home.voteUp(video)">Vote Up</button><button ng-click="home.voteDown(video)">Vote Down</button></li>
+  <li ng-if="home.topTenVotes" ng-repeat="video in home.videos | limitTo: 10"><a href="{{video.attributes.url}}" target="_blank" ng-click="home.watchVideo(video.id)">{{video.attributes.title}}</a> | <span>Votes: {{video.attributes.vote_tally}}</span><button ng-click="home.voteUp(video)">Vote Up</button><button ng-click="home.voteDown(video)">Vote Down</button></li>
 </ol>
+
 
 <input type="text" placeholder="Video Title" ng-model="home.video.title" />
 <input type="text" placeholder="Video Link" ng-model="home.video.url" />

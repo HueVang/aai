@@ -2,6 +2,28 @@ angular.module('aai').controller('HomeController', function($http, $location) {
   var showLogs = true; // set to true to show console logs, false to hide.
 
   var ctrl = this;
+  ctrl.allVideos;
+  ctrl.topTenViewed;
+  ctrl.topTenVotes;
+
+  ctrl.showAllVideos = function() {
+    ctrl.allVideos = true;
+    ctrl.topTenViewed = false;
+    ctrl.topTenVotes = false;
+  }
+
+  ctrl.showTopTenViewed = function() {
+    ctrl.allVideos = false;
+    ctrl.topTenViewed = true;
+    ctrl.topTenVotes = false;
+  }
+
+  ctrl.showTopTenVotes = function() {
+    ctrl.allVideos = false;
+    ctrl.topTenViewed = false;
+    ctrl.topTenVotes = true;
+  }
+
 
   ctrl.working = function() {
     if (showLogs) console.log('HomeController loaded');
@@ -18,6 +40,7 @@ angular.module('aai').controller('HomeController', function($http, $location) {
         return a > b ? -1 : a < b ? 1 : 0;
       });
       if (showLogs) console.log(res);
+      ctrl.showAllVideos();
     });
   }; // end ctrl.getAllVideos
 
@@ -55,5 +78,41 @@ angular.module('aai').controller('HomeController', function($http, $location) {
     })
 
   }; // end ctrl.watchVideo
+
+  ctrl.getTopTenViewed = function() {
+    $http.get('https://proofapi.herokuapp.com/videos?1&10').then(function(res){
+      ctrl.videos = res.data.data.sort(function(a, b){
+        a = a.attributes.view_tally;
+        b = b.attributes.view_tally;
+        return a > b ? -1 : a < b ? 1 : 0;
+      });
+      if (showLogs) console.log('This is the top ten viewed:', ctrl.videos);
+      ctrl.showTopTenViewed();
+    })
+  }; // end ctrl.getTopTenViewed
+
+  ctrl.getTopTenVotes = function() {
+    $http.get('https://proofapi.herokuapp.com/videos?1&10').then(function(res){
+      ctrl.videos = res.data.data.sort(function(a, b){
+        a = a.attributes.vote_tally;
+        b = b.attributes.vote_tally;
+        return a > b ? -1 : a < b ? 1 : 0;
+      });
+      if (showLogs) console.log('This is the top ten votes:', ctrl.videos);
+      ctrl.showTopTenVotes();
+    })
+  }; // end ctrl.getTopTenViewed
+
+  // var c = new Date(date).toDateString();
+
+  ctrl.voteUp = function(video) {
+    var vote = {'video_id' : video.id, 'opinion' : 1};
+    if (showLogs) console.log('Voted up!', vote);
+  }; // end ctrl.voteUp
+
+  ctrl.voteDown = function(video) {
+    var vote = {'video_id' : video.id, 'opinion' : -1};
+    if (showLogs) console.log('Voted down...', vote);
+  }; // end ctrl.voteDown
 
 }); // end angular.module

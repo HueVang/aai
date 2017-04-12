@@ -2,9 +2,13 @@ h1 {
   color: blue;
 }
 
+span {
+  color: red;
+}
+
 a {
   text-decoration: none;
-  color: inherit;
+  color: black;
 }
 
 a:hover {
