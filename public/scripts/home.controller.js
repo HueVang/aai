@@ -128,6 +128,9 @@ angular.module('aai').controller('HomeController', function($http, $location) {
       if (showLogs) console.log('Sorry, no voting on the weekends.');
     } else {
       var vote = {'video_id' : video.id, 'opinion' : 1};
+      $http.post('https://proofapi.herokuapp.com/votes', vote).then(function(res) {
+      if (showLogs) console.log('This is the response:', res);
+      });
       if (showLogs) console.log('Voted up!', vote);
     };
   }; // end ctrl.voteUp
@@ -139,6 +142,9 @@ angular.module('aai').controller('HomeController', function($http, $location) {
       if (showLogs) console.log('Sorry, no voting on the weekends.');
     } else {
       var vote = {'video_id' : video.id, 'opinion' : -1};
+      $http.post('https://proofapi.herokuapp.com/votes', vote).then(function(res) {
+      if (showLogs) console.log('This is the response:', res);
+      });
       if (showLogs) console.log('Voted down...', vote);
     };
   }; // end ctrl.voteDown
