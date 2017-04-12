@@ -1,12 +1,15 @@
 <h1>Hello world!</h1>
 
 <button ng-click="home.getAllVideos()">Get Videos</button>
+<button ng-click="home.getTopTenViewed()">Top 10 Viewed</button>
 
 <h2>This is going to be the list of videos</h2>
-<ol>
-  <li ng-repeat="video in home.videos">{{video.attributes.title}}</li>
+<ol class="videoList">
+  <li ng-repeat="video in home.videos"><a href="{{video.attributes.url}}" target="_blank" ng-click="home.watchVideo(video.id)">{{video.attributes.title}}</a></li>
 </ol>
 
 <input type="text" placeholder="Video Title" ng-model="home.video.title" />
 <input type="text" placeholder="Video Link" ng-model="home.video.url" />
 <button ng-click="home.addVideo()">Add Video</button>
+
+ <!-- <iframe ng-if="home.showVideo" width="600" height="340" ng-src="{{home.videoUrl}}" frameborder="0" allowfullscreen></iframe> -->
