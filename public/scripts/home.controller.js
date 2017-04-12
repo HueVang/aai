@@ -10,19 +10,19 @@ angular.module('aai').controller('HomeController', function($http, $location) {
     ctrl.allVideos = true;
     ctrl.topTenViewed = false;
     ctrl.topTenVotes = false;
-  }
+  };
 
   ctrl.showTopTenViewed = function() {
     ctrl.allVideos = false;
     ctrl.topTenViewed = true;
     ctrl.topTenVotes = false;
-  }
+  };
 
   ctrl.showTopTenVotes = function() {
     ctrl.allVideos = false;
     ctrl.topTenViewed = false;
     ctrl.topTenVotes = true;
-  }
+  };
 
 
   ctrl.working = function() {
@@ -61,28 +61,38 @@ angular.module('aai').controller('HomeController', function($http, $location) {
 
   ctrl.addVideo = function() {
     var date = new Date();
-    if (date.getDay() == 0 || date.getDay() == 6 || date.getDay() == 3) {
+    if (date.getDay() == 0 || date.getDay() == 6) {
       alert('Sorry, no posting on the weekends.');
       if (showLogs) console.log('Sorry, no posting on the weekends.');
     } else {
-      ctrl.slug(ctrl.video.title)
-      var video = ctrl.video
-      $http.post('https://proofapi.herokuapp.com/videos', video).then(function(res){
-        if (showLogs) console.log('The response:', res);
-        ctrl.getAllVideos();
-      })
-      ctrl.video = {};
-    }
-  }; // end ctrl.showVideo
-
+      $http.get('https://proofapi.herokuapp.com/videos?1&10').then(function(res) {
+        var videoArray = res.data.data;
+        var videoUrlArray = videoArray.map(function(video) {
+          return video.attributes.url;
+        });
+        if (videoUrlArray.includes(ctrl.video.url)) {
+          alert('Duplicate video! We have this already.');
+          ctrl.video = {};
+          if (showLogs) console.log('Duplicate video! We have this already.');
+        } else {
+          ctrl.slug(ctrl.video.title);
+          var video = ctrl.video;
+          $http.post('https://proofapi.herokuapp.com/videos', video).then(function(res) {
+            if (showLogs) console.log('The response:', res);
+            ctrl.getAllVideos();
+            ctrl.video = {};
+          });
+        };
+      });
+    };
+  }; // end ctrl.addVideo
 
   ctrl.watchVideo = function(videoId) {
     var video = {'video_id' : videoId};
     if (showLogs) console.log('This is the video object:', video);
     $http.post('https://proofapi.herokuapp.com/views', video).then(function(res){
       if (showLogs) console.log('This is the response:', res);
-    })
-
+    });
   }; // end ctrl.watchVideo
 
   ctrl.getTopTenViewed = function() {
@@ -94,7 +104,7 @@ angular.module('aai').controller('HomeController', function($http, $location) {
       });
       if (showLogs) console.log('This is the top ten viewed:', ctrl.videos);
       ctrl.showTopTenViewed();
-    })
+    });
   }; // end ctrl.getTopTenViewed
 
   ctrl.getTopTenVotes = function() {
@@ -119,7 +129,7 @@ angular.module('aai').controller('HomeController', function($http, $location) {
     } else {
       var vote = {'video_id' : video.id, 'opinion' : 1};
       if (showLogs) console.log('Voted up!', vote);
-    }
+    };
   }; // end ctrl.voteUp
 
   ctrl.voteDown = function(video) {
@@ -130,7 +140,7 @@ angular.module('aai').controller('HomeController', function($http, $location) {
     } else {
       var vote = {'video_id' : video.id, 'opinion' : -1};
       if (showLogs) console.log('Voted down...', vote);
-    }
+    };
   }; // end ctrl.voteDown
 
 }); // end angular.module
