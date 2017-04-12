@@ -10,14 +10,6 @@ angular.module('aai').controller('HomeController', function($http, $location) {
 
   ctrl.working();
 
-  ctrl.setAuthToken = function() {
-    $http.get('/home/authToken').then(function(res){
-      $http.defaults.headers.common = {'X-Auth-Token' : res.data};
-    });
-  }; // end ctrl.setAuthToken
-
-  ctrl.setAuthToken();
-
   ctrl.getAllVideos = function() {
     $http.get('https://proofapi.herokuapp.com/videos?1&10').then(function(res){
       ctrl.videos = res.data.data.sort(function(a, b){
@@ -28,6 +20,15 @@ angular.module('aai').controller('HomeController', function($http, $location) {
       if (showLogs) console.log(res);
     });
   }; // end ctrl.getAllVideos
+
+  ctrl.setAuthToken = function() {
+    $http.get('/home/authToken').then(function(res){
+      $http.defaults.headers.common = {'X-Auth-Token' : res.data};
+      ctrl.getAllVideos();
+    });
+  }; // end ctrl.setAuthToken
+
+  ctrl.setAuthToken();
 
   ctrl.slug = function(title) {
     ctrl.video.slug = title.toString().toLowerCase()
