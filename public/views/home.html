@@ -3,11 +3,10 @@
 <button ng-click="home.getAllVideos()">Get Videos</button>
 
 <h2>This is going to be the list of videos</h2>
-<ul>
-  <li>Starts here</li>
+<ol>
   <li ng-repeat="video in home.videos">{{video.attributes.title}}</li>
-</ul>
+</ol>
 
 <input type="text" placeholder="Video Title" ng-model="home.video.title" />
 <input type="text" placeholder="Video Link" ng-model="home.video.url" />
-<button ng-click="home.showVideo()">Add Video</button>
+<button ng-click="home.addVideo()">Add Video</button>
