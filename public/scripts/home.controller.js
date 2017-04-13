@@ -1,5 +1,5 @@
 angular.module('aai').controller('HomeController', function($http, $location) {
-  var showLogs = true; // set to true to show console logs, false to hide.
+  var showLogs = false; // set to true to show console logs, false to hide.
   var ctrl = this;
 
   // Variables that change what content shows on the page.
