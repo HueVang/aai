@@ -1,17 +1,11 @@
-<h1>Video Universe</h1>
+<h1>Video Galaxy</h1>
 
 <div id="main">
-
-<button ng-click="home.getAllVideos()">Get Videos</button>
-<button ng-click="home.getTopTenViewed()">Most Viewed</button>
-<button ng-click="home.getTopTenVotes()">Most Votes</button>
-<!-- <button ng-click="home.checkDate()">date</button> -->
-<h2>This is going to be the list of videos</h2>
-<!-- <ol class="videoList">
-  <li ng-if="home.allVideos" ng-repeat="video in home.videos"><a href="{{video.attributes.url}}" target="_blank" ng-click="home.watchVideo(video.id)">{{video.attributes.title}}</a><button ng-click="home.voteUp(video)">Vote Up</button><button ng-click="home.voteDown(video)">Vote Down</button></li>
-  <li ng-if="home.topTenViewed" ng-repeat="video in home.videos | limitTo: 10"><a href="{{video.attributes.url}}" target="_blank" ng-click="home.watchVideo(video.id)">{{video.attributes.title}}</a> | <span>Views: {{video.attributes.view_tally}}</span><button ng-click="home.voteUp(video)">Vote Up</button><button ng-click="home.voteDown(video)">Vote Down</button></li>
-  <li ng-if="home.topTenVotes" ng-repeat="video in home.videos | limitTo: 10"><a href="{{video.attributes.url}}" target="_blank" ng-click="home.watchVideo(video.id)">{{video.attributes.title}}</a> | <span>Votes: {{video.attributes.vote_tally}}</span><button ng-click="home.voteUp(video)">Vote Up</button><button ng-click="home.voteDown(video)">Vote Down</button></li>
-</ol> -->
+<button class="btn btn-primary" ng-click="home.getAllVideos()">All Videos</button>
+<button class="btn btn-primary" ng-click="home.getTopTenViewed()">Most Viewed</button>
+<button class="btn btn-primary" ng-click="home.getTopTenVotes()">Most Votes</button>
+<h2>Collection</h2>
+<br />
 
 <section ng-if="home.allVideos">
   <table align="center">
@@ -24,9 +18,10 @@
     </thead>
     <tbody>
       <tr ng-repeat="video in home.videos">
-        <th><a href="{{video.attributes.url}}" target="_blank" ng-click="home.watchVideo(video.id)">{{video.attributes.title}}</a></th>
-        <th><button ng-click="home.voteUp(video)">Vote Up</button></th>
-        <th><button ng-click="home.voteDown(video)">Vote Down</button></th>
+        <td><a href="{{video.attributes.url}}" target="_blank" ng-click="home.watchVideo(video.id)">{{video.attributes.title}}</a></td>
+        <td><button class="btn-sm btn-primary" ng-click="home.voteUp(video)">Vote Up</button></td>
+        <td><button class="btn-sm btn-warning" ng-click="home.voteDown(video)">Vote Down</button></td>
+        <td><button ng-if="home.showDelete" class="btn-sm btn-danger" ng-click="home.deleteVideo(video.id)">X</button></td>
       </tr>
     </tbody>
   </table>
@@ -44,10 +39,11 @@
     </thead>
     <tbody>
       <tr ng-repeat="video in home.videos | limitTo: 10">
-        <th><a href="{{video.attributes.url}}" target="_blank" ng-click="home.watchVideo(video.id)">{{video.attributes.title}}</a></th>
-        <th><span>{{video.attributes.view_tally}}</span></th>
-        <th><button ng-click="home.voteUp(video)">Vote Up</button></th>
-        <th><button ng-click="home.voteDown(video)">Vote Down</button></th>
+        <td><a href="{{video.attributes.url}}" target="_blank" ng-click="home.watchVideo(video.id)">{{video.attributes.title}}</a></td>
+        <td><span>{{video.attributes.view_tally}}</span></td>
+        <td><button class="btn-sm btn-primary" ng-click="home.voteUp(video)">Vote Up</button></td>
+        <td><button class="btn-sm btn-warning" ng-click="home.voteDown(video)">Vote Down</button></td>
+        <td><button ng-if="home.showDelete" class="btn-sm btn-danger" ng-click="home.deleteVideo(video.id)">X</button></td>
       </tr>
     </tbody>
   </table>
@@ -65,18 +61,21 @@
     </thead>
     <tbody>
       <tr ng-repeat="video in home.videos | limitTo: 10">
-        <th><a href="{{video.attributes.url}}" target="_blank" ng-click="home.watchVideo(video.id)">{{video.attributes.title}}</a></th>
-        <th><span>{{video.attributes.vote_tally}}</span></th>
-        <th><button ng-click="home.voteUp(video)">Vote Up</button></th>
-        <th><button ng-click="home.voteDown(video)">Vote Down</button></th>
+        <td><a href="{{video.attributes.url}}" target="_blank" ng-click="home.watchVideo(video.id)">{{video.attributes.title}}</a></td>
+        <td><span>{{video.attributes.vote_tally}}</span></td>
+        <td><button class="btn-sm btn-primary" ng-click="home.voteUp(video)">Vote Up</button></td>
+        <td><button class="btn-sm btn-warning" ng-click="home.voteDown(video)">Vote Down</button></td>
+        <td><button ng-if="home.showDelete" class="btn-sm btn-danger" ng-click="home.deleteVideo(video.id)">X</button></td>
       </tr>
     </tbody>
   </table>
 </section>
 
+<br />
 <input type="text" placeholder="Video Title" ng-model="home.video.title" />
 <input type="text" placeholder="Video Link" ng-model="home.video.url" />
-<button ng-click="home.addVideo()">Add Video</button>
+<button class="btn btn-success" ng-click="home.addVideo()">Add Video</button>
+<button class="btn btn-danger" ng-click="home.showDeleteButtons()">Delete Video</button>
 </div>
 
  <!-- <iframe ng-if="home.showVideo" width="600" height="340" ng-src="{{home.videoUrl}}" frameborder="0" allowfullscreen></iframe> -->

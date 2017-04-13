@@ -7,15 +7,23 @@ body {
 section {
   margin: 0 auto;
   text-align: center;
+  max-height: 400px;
+  overflow-y: scroll;
 }
 
-h1, h2, p, span, li, a, th {
+p, span, li, a, th {
   font-family: 'Roboto', sans-serif;
 }
 
 h1 {
-  color: blue;
+  font-family: 'Dosis', sans-serif;
+  color: #19b6c6;
   text-align: center;
+}
+
+h2 {
+  font-family: 'Dosis', sans-serif;
+  text-decoration: underline;
 }
 
 button {
@@ -26,12 +34,8 @@ button:hover {
   cursor: pointer;
 }
 
-li {
-  display: inherit;
-}
-
-span {
-  color: red;
+th {
+  text-align: center;
 }
 
 a {
@@ -52,7 +56,6 @@ a:hover {
   overflow-y: scroll;
   height: 280px;
 }
-
 
 /*IDs*/
 

@@ -37,11 +37,11 @@ angular.module('aai').controller('HomeController', function($http, $location) {
   ctrl.videos = [];
   // Gets all videos from the API and sorts them by most recent.
   ctrl.getAllVideos = function() {
-    $http.get('https://proofapi.herokuapp.com/videos?1&10').then(function(res){
+    $http.get('https://proofapi.herokuapp.com/videos?1&10').then(function(res) {
       // Saves the current user's ID in the ctrl.user_id variable.
       ctrl.user_id = res.data.data[0].relationships.user.data.id;
       // Sorting method that orders video by most recent creation date.
-      ctrl.videos = res.data.data.sort(function(a, b){
+      ctrl.videos = res.data.data.sort(function(a, b) {
         a = new Date(a.attributes.created_at);
         b = new Date(b.attributes.created_at);
         return a > b ? -1 : a < b ? 1 : 0;
@@ -52,7 +52,7 @@ angular.module('aai').controller('HomeController', function($http, $location) {
 
   // Retrieves authentication token from server to access API.
   ctrl.setAuthToken = function() {
-    $http.get('/home/authToken').then(function(res){
+    $http.get('/home/authToken').then(function(res) {
       $http.defaults.headers.common = {'X-Auth-Token' : res.data};
       ctrl.getAllVideos();
     });
@@ -87,6 +87,7 @@ angular.module('aai').controller('HomeController', function($http, $location) {
           ctrl.slug(ctrl.video.title);
           var video = ctrl.video;
           $http.post('https://proofapi.herokuapp.com/videos', video).then(function(res) {
+            alert('Video added!');
             ctrl.getAllVideos();
             // Clears input field by setting the ng-model on home.html to empty.
             ctrl.video = {};
@@ -96,15 +97,38 @@ angular.module('aai').controller('HomeController', function($http, $location) {
     };
   }; // end ctrl.addVideo
 
+  // Linked to ng-ifs on home.html.
+  // True shows the delete buttons, false hides them.
+  ctrl.showDelete = false;
+  ctrl.showDeleteButtons = function() {
+    if (ctrl.showDelete) {
+      ctrl.showDelete = false;
+    } else {
+      ctrl.showDelete = true;
+    };
+  };
+
+  ctrl.deleteVideo = function(videoId) {
+    var result = confirm("Delete this video?");
+      if (result) {
+        $http.delete('https://proofapi.herokuapp.com/videos/' + videoId).then(function(res) {
+          if (showLogs) console.log('This is the response', res);
+          alert('Video deleted');
+        });
+      } else {
+        alert('Video not deleted');
+      };
+  }; // end ctrl.deleteVideo
+
   ctrl.watchVideo = function(videoId) {
     var video = {'video_id' : videoId};
-    $http.post('https://proofapi.herokuapp.com/views', video).then(function(res){
+    $http.post('https://proofapi.herokuapp.com/views', video).then(function(res) {
       if (showLogs) console.log('This is the response:', res);
     });
   }; // end ctrl.watchVideo
 
   ctrl.getTopTenViewed = function() {
-    $http.get('https://proofapi.herokuapp.com/videos?1&10').then(function(res){
+    $http.get('https://proofapi.herokuapp.com/videos?1&10').then(function(res) {
       // Sorts the videos by most views.
       ctrl.videos = res.data.data.sort(function(a, b){
         a = a.attributes.view_tally;
@@ -117,7 +141,7 @@ angular.module('aai').controller('HomeController', function($http, $location) {
   }; // end ctrl.getTopTenViewed
 
   ctrl.getTopTenVotes = function() {
-    $http.get('https://proofapi.herokuapp.com/videos?1&10').then(function(res){
+    $http.get('https://proofapi.herokuapp.com/videos?1&10').then(function(res) {
       // Sorts the videos by most votes.
       ctrl.videos = res.data.data.sort(function(a, b){
         a = a.attributes.vote_tally;
