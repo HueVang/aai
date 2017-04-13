@@ -154,7 +154,6 @@ angular.module('aai').controller('HomeController', function($http, $location) {
     if (showLogs) console.log('This is the date:', currentDate);
     $http.get('/home/dates/' + user_id).then(function(res) {
       if (showLogs) console.log('This is the date from the GET database:', res.data);
-      console.log('This is the res.data', res.data);
       if (res.data.length == 0) {
         if (showLogs) console.log('Array Empty!');
         dateOfLastVote = currentDate;
