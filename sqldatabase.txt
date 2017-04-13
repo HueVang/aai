@@ -1,0 +1,11 @@
+CREATE TABLE votes(
+id SERIAL PRIMARY KEY,
+user_id VARCHAR(100),
+video_id VARCHAR(100)
+);
+
+CREATE TABLE dates(
+id SERIAL PRIMARY KEY,
+user_id VARCHAR(100),
+date VARCHAR(100)
+);

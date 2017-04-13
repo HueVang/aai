@@ -3,7 +3,7 @@
 <button ng-click="home.getAllVideos()">Get Videos</button>
 <button ng-click="home.getTopTenViewed()">Most Viewed</button>
 <button ng-click="home.getTopTenVotes()">Most Votes</button>
-
+<!-- <button ng-click="home.checkDate()">date</button> -->
 <h2>This is going to be the list of videos</h2>
 <ol class="videoList">
   <li ng-if="home.allVideos" ng-repeat="video in home.videos"><a href="{{video.attributes.url}}" target="_blank" ng-click="home.watchVideo(video.id)">{{video.attributes.title}}</a><button ng-click="home.voteUp(video)">Vote Up</button><button ng-click="home.voteDown(video)">Vote Down</button></li>

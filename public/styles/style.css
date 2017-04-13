@@ -2,6 +2,10 @@ h1 {
   color: blue;
 }
 
+button:hover {
+  cursor: pointer;
+}
+
 span {
   color: red;
 }

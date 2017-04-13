@@ -34,6 +34,8 @@ angular.module('aai').controller('HomeController', function($http, $location) {
 
   ctrl.getAllVideos = function() {
     $http.get('https://proofapi.herokuapp.com/videos?1&10').then(function(res){
+      ctrl.user_id = res.data.data[0].relationships.user.data.id;
+      if (showLogs) console.log('This is the user_id:', ctrl.user_id);
       ctrl.videos = res.data.data.sort(function(a, b){
         a = new Date(a.attributes.created_at);
         b = new Date(b.attributes.created_at);
@@ -116,10 +118,8 @@ angular.module('aai').controller('HomeController', function($http, $location) {
       });
       if (showLogs) console.log('This is the top ten votes:', ctrl.videos);
       ctrl.showTopTenVotes();
-    })
+    });
   }; // end ctrl.getTopTenViewed
-
-  // var c = new Date(date).toDateString();
 
   ctrl.voteUp = function(video) {
     var date = new Date();
@@ -128,10 +128,8 @@ angular.module('aai').controller('HomeController', function($http, $location) {
       if (showLogs) console.log('Sorry, no voting on the weekends.');
     } else {
       var vote = {'video_id' : video.id, 'opinion' : 1};
-      $http.post('https://proofapi.herokuapp.com/votes', vote).then(function(res) {
-      if (showLogs) console.log('This is the response:', res);
-      });
-      if (showLogs) console.log('Voted up!', vote);
+      ctrl.checkDate(video, vote);
+      if (showLogs) console.log('Voted Up!', vote);
     };
   }; // end ctrl.voteUp
 
@@ -142,11 +140,82 @@ angular.module('aai').controller('HomeController', function($http, $location) {
       if (showLogs) console.log('Sorry, no voting on the weekends.');
     } else {
       var vote = {'video_id' : video.id, 'opinion' : -1};
-      $http.post('https://proofapi.herokuapp.com/votes', vote).then(function(res) {
-      if (showLogs) console.log('This is the response:', res);
-      });
+      ctrl.checkDate(video, vote);
       if (showLogs) console.log('Voted down...', vote);
     };
   }; // end ctrl.voteDown
+
+  var dateOfLastVote;
+  ctrl.checkDate = function(video, vote) {
+    var user_id = ctrl.user_id;
+    var video_id = video.id;
+    if (showLogs) console.log('This is the checkDate user_id:', user_id);
+    var currentDate = new Date().toDateString();
+    if (showLogs) console.log('This is the date:', currentDate);
+    $http.get('/home/dates/' + user_id).then(function(res) {
+      if (showLogs) console.log('This is the date from the GET database:', res.data);
+      console.log('This is the res.data', res.data);
+      if (res.data.length == 0) {
+        if (showLogs) console.log('Array Empty!');
+        dateOfLastVote = currentDate;
+        $http.post('/home/dates/', {'user_id' : user_id, 'date' : currentDate}).then(function(res) {
+          if (showLogs) console.log('Posted into dates table:', res.data);
+        });
+      } else {
+        if (showLogs) console.log('Array no empty');
+        dateOfLastVote = res.data[0].date;
+      }
+      if (showLogs) console.log('dateOfLastVote:', dateOfLastVote);
+      if (currentDate == dateOfLastVote) {
+        if (showLogs) console.log('Still on the same day.');
+        $http.get('/home/votes/' + user_id).then(function(res) {
+          var alreadyVotedToday = false;
+          if (showLogs) console.log('This is the votes for the user:', res.data);
+          var voteList = res.data;
+          voteList.forEach(function(vote) {
+            if (showLogs) console.log('This is the vote info:', vote);
+            if (video_id == vote.video_id && currentDate == vote.date) {
+              alreadyVotedToday = true;
+            };
+          });
+          if (alreadyVotedToday) {
+            alert('You voted for this already');
+          } else {
+            alert('New vote for today!');
+            var voteInfo = {'user_id' : user_id, 'video_id' : video_id, 'date' : currentDate};
+            $http.post('/home/votes', voteInfo).then(function(res) {
+              if (showLogs) console.log('Posted info into votes:', res.data);
+              $http.post('https://proofapi.herokuapp.com/votes', vote).then(function(res) {
+                if (showLogs) console.log('This is the response:', res);
+                ctrl.getTopTenVotes();
+              });
+            });
+          };
+        });
+      } else {
+        dateOfLastVote = currentDate;
+        if (showLogs) console.log('dateOfLastVote else:', dateOfLastVote);
+        $http.delete('/home/dates/' + user_id).then(function(res) {
+          if (showLogs) console.log('Deleted dates:', res);
+          $http.delete('/home/votes/' + user_id).then(function(res) {
+            if (showLogs) console.log('Deleted votes:', res);
+            $http.post('/home/dates/', {'user_id' : user_id, 'date' : currentDate}).then(function(res) {
+              if (showLogs) console.log('Posted info into dates:', res.data);
+              alert('First vote of the day!');
+              var voteInfo = {'user_id' : user_id, 'video_id' : video_id, 'date' : currentDate};
+              $http.post('/home/votes', voteInfo).then(function(res) {
+                if (showLogs) console.log('Posted info into votes:', res.data);
+                $http.post('https://proofapi.herokuapp.com/votes', vote).then(function(res) {
+                  if (showLogs) console.log('This is the response:', res);
+                  ctrl.getTopTenVotes();
+                });
+              });
+            });
+          });
+        });
+      };
+    });
+  }; // end ctrl.checkDate
+
 
 }); // end angular.module
