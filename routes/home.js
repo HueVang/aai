@@ -8,11 +8,13 @@ var pool = new pg.Pool(config);
 
 require('dotenv').config()
 
+// Retrieves authentication token and sends it to home.controller.
 var authToken = process.env.AUTH;
 router.get('/authToken', function(req, res) {
   res.send(authToken);
 });
 
+// Gets all the daily votes from the database for a specific user.
 router.get('/votes/:id', function(req, res){
   pool.connect(function(err, client, done){
     if(err){
@@ -36,6 +38,7 @@ router.get('/votes/:id', function(req, res){
   });
 }); // end router.get /votes
 
+// Gets the date of the most recent vote for a specific user.
 router.get('/dates/:id', function(req, res){
   pool.connect(function(err, client, done){
     if(err){
@@ -59,7 +62,8 @@ router.get('/dates/:id', function(req, res){
   });
 }); // end router.get /dates
 
-
+// Posts the user's ID, video ID, and the current date into the database.
+// This keeps track of which video has a vote for a specific day.
 router.post('/votes', function(req, res){
   pool.connect(function(err, client, done){
     if(err){
@@ -83,7 +87,7 @@ router.post('/votes', function(req, res){
   });
 }); // end router.post /votes
 
-
+// Posts the user's ID and the current date.
 router.post('/dates', function(req, res){
   console.log('This is the request body', req.body);
   pool.connect(function(err, client, done){
@@ -108,7 +112,8 @@ router.post('/dates', function(req, res){
   });
 }); // end router.post /dates
 
-
+// Deletes all votes on all the videos a user has voted for.
+// Occurs when the user casts their first vote on a new day.
 router.delete('/votes/:id', function(req, res){
   pool.connect(function(err, client, done){
     console.log(req.params.id);
@@ -132,6 +137,8 @@ router.delete('/votes/:id', function(req, res){
   });
 });
 
+// Deletes the date tied to the user's most recent vote.
+// Occurs whenever the user casts a vote on a new day.
 router.delete('/dates/:id', function(req, res){
   pool.connect(function(err, client, done){
     console.log(req.params.id);
