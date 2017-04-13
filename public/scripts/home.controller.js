@@ -166,6 +166,7 @@ angular.module('aai').controller('HomeController', function($http, $location) {
       if (result) {
         $http.delete('https://proofapi.herokuapp.com/videos/' + videoId).then(function(res) {
           if (showLogs) console.log('This is the response', res);
+          ctrl.showAllVideos();
           alert('Video deleted');
         });
       } else {
