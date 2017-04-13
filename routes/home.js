@@ -1,7 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var config = {
-  database: 'aai'
+  host: process.env.HOST,
+  database: process.env.DB,
+  user: process.env.USER,
+  password: process.env.PASSWORD,
+  port: '5432'
 };
 var pg = require('pg');
 var pool = new pg.Pool(config);
