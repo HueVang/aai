@@ -53,6 +53,7 @@ angular.module('aai').controller('HomeController', function($http, $location) {
   // Retrieves authentication token from server to access API.
   ctrl.setAuthToken = function() {
     $http.get('/home/authToken').then(function(res) {
+      console.log('This is the auth token:', res.data);
       $http.defaults.headers.common = {'X-Auth-Token' : res.data};
       ctrl.getAllVideos();
     });
