@@ -144,6 +144,7 @@ angular.module('aai').controller('HomeController', function($http, $location) {
     $http.patch('https://proofapi.herokuapp.com/videos/' + ctrl.editVideo.id, editedVideo).then(function(res) {
       if (showLogs) console.log('Video has been updated:', res);
       ctrl.editVideo= {};
+      ctrl.selectVideoToEdit();
       ctrl.getAllVideos();
       alert('Video updated!');
     });
@@ -228,6 +229,7 @@ angular.module('aai').controller('HomeController', function($http, $location) {
   }; // end ctrl.voteDown
 
   // Variable that holds the date of the most recent vote.
+  // Function checks to see if the user voted for a specific video today.
   var dateOfLastVote;
   ctrl.checkDate = function(video, vote) {
     var user_id = ctrl.user_id;

@@ -6,7 +6,7 @@
 <button class="btn btn-primary" ng-click="home.getTopTenVotes()">Most Votes</button>
 <h2>Collection</h2>
 <br />
-
+<!-- Table that displays if "All Videos" button is pressed -->
 <section ng-if="home.allVideos">
   <table align="center">
     <thead>
@@ -27,7 +27,7 @@
     </tbody>
   </table>
 </section>
-
+<!-- Table that displays if "Most Viewed" button is pressed -->
 <section ng-if="home.topTenViewed">
   <table align="center">
     <thead>
@@ -49,7 +49,7 @@
     </tbody>
   </table>
 </section>
-
+<!-- That that displays if "Most Votes" button is pressed -->
 <section ng-if="home.topTenVotes">
   <table align="center">
     <thead>
@@ -71,7 +71,7 @@
     </tbody>
   </table>
 </section>
-
+<!-- Various inputs for adding, editing, and deleting a video -->
 <br />
 <input id="longInput" ng-if="home.editingVideo" type="text" ng-model="home.editVideo.title" />
 <button ng-if="home.editingVideo" class="btn btn-success" ng-click="home.saveChanges()">Save Changes</button>
@@ -82,5 +82,3 @@
 <button ng-if="!home.editingVideo" class="btn btn-info" ng-click="home.showEditButtons()">Edit Videos</button>
 <button ng-if="!home.editingVideo" class="btn btn-danger" ng-click="home.showDeleteButtons()">Delete Videos</button>
 </div>
-
- <!-- <iframe ng-if="home.showVideo" width="600" height="340" ng-src="{{home.videoUrl}}" frameborder="0" allowfullscreen></iframe> -->
