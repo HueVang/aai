@@ -21,6 +21,7 @@
         <td><a href="{{video.attributes.url}}" target="_blank" ng-click="home.watchVideo(video.id)">{{video.attributes.title}}</a></td>
         <td><button class="btn-sm btn-primary" ng-click="home.voteUp(video)">Vote Up</button></td>
         <td><button class="btn-sm btn-warning" ng-click="home.voteDown(video)">Vote Down</button></td>
+        <td><button ng-if="home.showEdit" class="btn-sm btn-info" ng-click="home.selectVideoToEdit(video)">Edit</button></td>
         <td><button ng-if="home.showDelete" class="btn-sm btn-danger" ng-click="home.deleteVideo(video.id)">X</button></td>
       </tr>
     </tbody>
@@ -72,10 +73,14 @@
 </section>
 
 <br />
-<input type="text" placeholder="Video Title" ng-model="home.video.title" />
-<input type="text" placeholder="Video Link" ng-model="home.video.url" />
-<button class="btn btn-success" ng-click="home.addVideo()">Add Video</button>
-<button class="btn btn-danger" ng-click="home.showDeleteButtons()">Delete Video</button>
+<input id="longInput" ng-if="home.editingVideo" type="text" ng-model="home.editVideo.title" />
+<button ng-if="home.editingVideo" class="btn btn-success" ng-click="home.saveChanges()">Save Changes</button>
+<button ng-if="home.editingVideo" class="btn btn-danger" ng-click="home.selectVideoToEdit()">Cancel</button>
+<input ng-if="!home.editingVideo" type="text" placeholder="Video Title" ng-model="home.video.title" />
+<input ng-if="!home.editingVideo" type="text" placeholder="Video Link" ng-model="home.video.url" />
+<button ng-if="!home.editingVideo" class="btn btn-success" ng-click="home.addVideo()">Add Video</button>
+<button ng-if="!home.editingVideo" class="btn btn-info" ng-click="home.showEditButtons()">Edit Videos</button>
+<button ng-if="!home.editingVideo" class="btn btn-danger" ng-click="home.showDeleteButtons()">Delete Videos</button>
 </div>
 
  <!-- <iframe ng-if="home.showVideo" width="600" height="340" ng-src="{{home.videoUrl}}" frameborder="0" allowfullscreen></iframe> -->

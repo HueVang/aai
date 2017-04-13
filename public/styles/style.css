@@ -63,3 +63,7 @@ a:hover {
   margin: 0 auto;
   text-align: center;
 }
+
+#longInput {
+  width: 250px;
+}

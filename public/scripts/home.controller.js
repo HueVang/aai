@@ -61,9 +61,11 @@ angular.module('aai').controller('HomeController', function($http, $location) {
 
   ctrl.slug = function(title) {
     ctrl.video.slug = title.toString().toLowerCase()
-      .replace(/\s+/g, '-')
-      .replace(/^-+/, '')
-      .replace(/-+$/, '');
+    .replace(/\s+/g, '-')
+    .replace(/[^\w\-]+/g, '')
+    .replace(/\-\-+/g, '-')
+    .replace(/^-+/, '')
+    .replace(/-+$/, '');
   }; // end ctrl.slug
 
   ctrl.addVideo = function() {
@@ -96,6 +98,56 @@ angular.module('aai').controller('HomeController', function($http, $location) {
       });
     };
   }; // end ctrl.addVideo
+
+  // Linked to ng-ifs on home.html.
+  // True shows the edit buttons, false hides them.
+  ctrl.showEdit = false;
+  ctrl.showEditButtons = function() {
+    if (ctrl.showEdit) {
+      ctrl.showEdit = false;
+    } else {
+      ctrl.showEdit = true;
+    };
+  }; // end ctrl.showEditButtons
+
+  // ctrl.editVideo will be the object that will contain the video to edit's information.
+  // ctrl.editingVideo links to ng-ifs on the home.html page.
+  // Setting it to "true" hides the add & delete buttons and brings up the edit input field.
+  ctrl.editVideo = {}
+  ctrl.editingVideo = false;
+  // Running this function takes the video's information as an argument and sets ctrl.editVideo.
+  ctrl.selectVideoToEdit = function(video) {
+    if (ctrl.editingVideo) {
+      ctrl.editVideo = {};
+      ctrl.editingVideo = false;
+    } else {
+      console.log('This is the video:', video);
+      ctrl.editVideo.title = video.attributes.title;
+      ctrl.editVideo.id = video.id;
+      ctrl.slugEdit(ctrl.editVideo.title);
+      ctrl.editingVideo = true;
+    };
+  }; // end ctrl.selectVideoToEdit
+
+  // Makes the video title a slug.
+  ctrl.slugEdit = function(title) {
+    ctrl.editVideo.slug = title.toString().toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^\w\-]+/g, '')
+      .replace(/\-\-+/g, '-')
+      .replace(/^-+/, '')
+      .replace(/-+$/, '');
+  }; // end ctrl.slugEdit
+
+  ctrl.saveChanges = function() {
+    var editedVideo = {'title' : ctrl.editVideo.title, 'slug' : ctrl.editVideo.slug};
+    $http.patch('https://proofapi.herokuapp.com/videos/' + ctrl.editVideo.id, editedVideo).then(function(res) {
+      if (showLogs) console.log('Video has been updated:', res);
+      ctrl.editVideo= {};
+      ctrl.getAllVideos();
+      alert('Video updated!');
+    });
+  }; // end ctrl.saveChanges
 
   // Linked to ng-ifs on home.html.
   // True shows the delete buttons, false hides them.
